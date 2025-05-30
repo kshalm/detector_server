@@ -1,3 +1,14 @@
+config_setup:
+  description: Alice's detector control to set bias.
+  req_port: 56000
+  http_port: 56001
+  loki_host: localhost
+  loki_port: 3100
+  service_name: alice_det_server
+  redis_host: localhost
+  redis_port: 6379
+  register_redis: false
+  version: 1.0.0
 Comparator:
   hyst1A:
     ch: 2
