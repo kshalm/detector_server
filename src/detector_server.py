@@ -3,6 +3,7 @@ import os
 from usb_3100_wrapper import mccusb3100
 from keithleyBiasControl import keithley
 from zmqhelper.zmqbase import ZMQServiceBase
+import json
 
 def load_yaml(filename='det.yaml'):
     path = os.path.join(os.path.pardir, "config")
@@ -80,18 +81,18 @@ class DetectorControlService(ZMQServiceBase):
         
         
         # establish hardware connections
-        try:
-            self.biasControl, self.biasControlPresent = connect_to_keithly(self.config_file)
-            self.logger.info(f"Keithley Bias Control initialized: {self.biasControlPresent}")
-        except Exception as e:
-            self.logger.error(f"Failed to connect to Keithley Bias Control: {e}")
-            os._exit(1)
-        try:
-            self.mcc, self.mccPresent = connect_to_mcc()
-            self.logger.info(f"MCC USB-3100 initialized: {self.mccPresent}")
-        except Exception as e:
-            self.logger.error(f"Failed to connect to MCC USB-3100: {e}")
-            os._exit(1)
+        # try:
+        self.biasControl, self.biasControlPresent = connect_to_keithly(self.config_file)
+        self.logger.info(f"Keithley Bias Control initialized: {self.biasControlPresent}")
+        # except Exception as e:
+            # self.logger.error(f"Failed to connect to Keithley Bias Control: {e}")
+            # os._exit(1)
+        # try:
+        self.mcc, self.mccPresent = connect_to_mcc()
+        self.logger.info(f"MCC USB-3100 initialized: {self.mccPresent}")
+        # except Exception as e:
+        #     self.logger.error(f"Failed to connect to MCC USB-3100: {e}")
+        #     os._exit(1)
         
         self.logger.info(f"{self.service_name} initialized")
 
