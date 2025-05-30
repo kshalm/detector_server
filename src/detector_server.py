@@ -78,19 +78,21 @@ class DetectorControlService(ZMQServiceBase):
             redis_port = cParams['redis_port'],
             service_name = cParams['service_name']
         )
-        self.logger.info(f"Initializing {self.service_name} with config file: {self.config_file}")
-        print(f"Config file: {self.config_file}")
+        self.logger.info(f"Initializing {self.service_name} with config: {self.config}")
+        print(f"Config file: {self.config}")
         
         # establish hardware connections
         # try:
         self.biasControl, self.biasControlPresent = connect_to_keithly(self.config_file)
         self.logger.info(f"Keithley Bias Control initialized: {self.biasControlPresent}")
+        print(f"Keithley Bias Control initialized: {self.biasControlPresent}")
         # except Exception as e:
             # self.logger.error(f"Failed to connect to Keithley Bias Control: {e}")
             # os._exit(1)
         # try:
         self.mcc, self.mccPresent = connect_to_mcc()
         self.logger.info(f"MCC USB-3100 initialized: {self.mccPresent}")
+        print(f"MCC USB-3100 initialized: {self.mccPresent}")
         # except Exception as e:
         #     self.logger.error(f"Failed to connect to MCC USB-3100: {e}")
         #     os._exit(1)
@@ -99,6 +101,7 @@ class DetectorControlService(ZMQServiceBase):
 
     def handle_request(self, message: str) -> str:
         self.logger.info(f"Received message: {message}")
+        print(f"Received message: {message}")
         parts = message.split()
         cmd = parts[0].lower()
 
@@ -107,7 +110,7 @@ class DetectorControlService(ZMQServiceBase):
             #     return "Connected"
 
         if cmd == "commands":
-            return json.dumps({
+            msg = json.dumps({
                 "commands": [
                     "test",
                     "getconfig",
@@ -119,31 +122,31 @@ class DetectorControlService(ZMQServiceBase):
                 ]
             })
 
-        if cmd == "getconfig":
+        elif cmd == "getconfig":
             cfg = load_yaml(self.config_file)
             self.logger.info(f"Configuration loaded: {cfg}")
-            return json.dumps(cfg)
+            msg = json.dumps(cfg)
 
-        if cmd == "resetdet":
+        elif cmd == "resetdet":
             ok = reset_detectors(self.config_file)
             self.logger.info(f"Detectors reset: {ok}")
-            return str(ok)
+            msg = str(ok)
 
-        if cmd == "setdet":
+        elif cmd == "setdet":
             ch = int(parts[1])
             voltage = float(parts[2])
             ok = self.biasControl.set_voltage(ch, voltage) if self.biasControlPresent else False
             self.logger.info(f"Set Detector {ch} to {voltage}V: {ok}")
-            return str(ok)
+            msg = str(ok)
 
-        if cmd == "setvolt":
+        elif cmd == "setvolt":
             ch = int(parts[1])
             voltage = float(parts[2])
             ok = self.biasControl.set_voltage(ch, voltage) if self.biasControlPresent else False
             self.logger.info(f"Set Voltage on channel {ch} to {voltage}V: {ok}")
-            return str(ok)
+            msg = str(ok)
 
-        if cmd == "setdetconfig":
+        elif cmd == "setdetconfig":
             settings = json.loads(parts[1])
             cfg = load_yaml(self.config_file)
             for k, v in settings.items():
@@ -151,9 +154,9 @@ class DetectorControlService(ZMQServiceBase):
             save_yaml_data(self.config_file, cfg)
             ok = reset_detectors(self.config_file)
             self.logger.info(f"Detector configuration set: {ok}")
-            return str(ok)
+            msg = str(ok)
 
-        if cmd == "setcomparatorconfig":
+        elif cmd == "setcomparatorconfig":
             settings = json.loads(parts[1])
             cfg = load_yaml(self.config_file)
             for k, v in settings.items():
@@ -161,9 +164,9 @@ class DetectorControlService(ZMQServiceBase):
             save_yaml_data(self.config_file, cfg)
             ok = reset_comparator(self.config_file)
             self.logger.info(f"Comparator configuration set: {ok}") 
-            return str(ok)
+            msg = str(ok)
 
-        if cmd == "setcomparatorchannel":
+        elif cmd == "setcomparatorchannel":
             channel = parts[1]
             value = float(parts[2])
             cfg = load_yaml(self.config_file)
@@ -171,9 +174,12 @@ class DetectorControlService(ZMQServiceBase):
             save_yaml_data(self.config_file, cfg)
             ok = reset_comparator(self.config_file)
             self.logger.info(f"Set Comparator channel {channel} to {value}V: {ok}")
-            return str(ok)
-        self.logger.warning(f"Invalid command: {message}")
-        return "Invalid Command"
+            msg = str(ok)
+        else:
+            self.logger.warning(f"Invalid command: {message}")
+            msg = "Invalid Command"
+        print(f"Response: {msg}")
+        return msg
 
         # except Exception as e:
         #     self.logger.error(f"Error handling '{message}': {e}")
