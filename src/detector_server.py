@@ -56,7 +56,7 @@ class DetectorControlService(ZMQServiceBase):
     def __init__(self, config_file='det.yaml', n_workers=1):
         
         self.config_file = config_file
-        self.config = self.load_yaml(self.config_file)
+        self.config = load_yaml(self.config_file)
         
         cParams = self.config['config_setup']
         if 'redis_host' not in cParams or cParams['register_redis'] is False:
