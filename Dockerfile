@@ -50,7 +50,7 @@ WORKDIR /app
 RUN python3 -m pip install --upgrade pip && \
      pip3 --no-cache-dir install -r requirements.txt
 
-# COPY ./build/gpib /app/build/gpib
+COPY ./build/gpib /app/build/gpib
 WORKDIR /app/build/gpib
 RUN python3 setup.py install
 
