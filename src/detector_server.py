@@ -20,18 +20,18 @@ def save_yaml_data(config_file, yaml_data):
 def connect_to_keithly(config_file):
     yaml_data = load_yaml(config_file)
     gpib = yaml_data['Keithley']['Info']['GpibAddr']
-    try:
-        kc = keithley(gpib)
-        return kc, True
-    except Exception:
-        return None, False
+    # try:
+    kc = keithley(gpib)
+    return kc, True
+    # except Exception:
+    #     return None, False
 
 def connect_to_mcc():
-    try:
-        m = mccusb3100()
-        return m, True
-    except Exception:
-        return None, False
+    # try:
+    m = mccusb3100()
+    return m, True
+    # except Exception:
+    #     return None, False
 
 def reset_comparator(yaml_file):
     if not DetectorControlService.mccPresent:
