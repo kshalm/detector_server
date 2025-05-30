@@ -58,7 +58,7 @@ class DetectorControlService(ZMQServiceBase):
         
         self.config_file = config_file
         self.config = load_yaml(self.config_file)
-        
+
         cParams = self.config['config_setup']
         if 'redis_host' not in cParams or cParams['register_redis'] is False:
             cParams['redis_host'] = None 
@@ -78,7 +78,8 @@ class DetectorControlService(ZMQServiceBase):
             redis_port = cParams['redis_port'],
             service_name = cParams['service_name']
         )
-        
+        self.logger.info(f"Initializing {self.service_name} with config file: {self.config_file}")
+        print(f"Config file: {self.config_file}")
         
         # establish hardware connections
         # try:
@@ -101,82 +102,82 @@ class DetectorControlService(ZMQServiceBase):
         parts = message.split()
         cmd = parts[0].lower()
 
-        try:
+        # try:
             # if cmd == "test":
             #     return "Connected"
 
-            if cmd == "commands":
-                return json.dumps({
-                    "commands": [
-                        "test",
-                        "getconfig",
-                        "resetdet",
-                        "setdet",
-                        "setdetconfig",
-                        "setcomparatorconfig",
-                        "setcomparatorchannel"
-                    ]
-                })
+        if cmd == "commands":
+            return json.dumps({
+                "commands": [
+                    "test",
+                    "getconfig",
+                    "resetdet",
+                    "setdet",
+                    "setdetconfig",
+                    "setcomparatorconfig",
+                    "setcomparatorchannel"
+                ]
+            })
 
-            if cmd == "getconfig":
-                cfg = load_yaml(self.config_file)
-                self.logger.info(f"Configuration loaded: {cfg}")
-                return json.dumps(cfg)
+        if cmd == "getconfig":
+            cfg = load_yaml(self.config_file)
+            self.logger.info(f"Configuration loaded: {cfg}")
+            return json.dumps(cfg)
 
-            if cmd == "resetdet":
-                ok = reset_detectors(self.config_file)
-                self.logger.info(f"Detectors reset: {ok}")
-                return str(ok)
+        if cmd == "resetdet":
+            ok = reset_detectors(self.config_file)
+            self.logger.info(f"Detectors reset: {ok}")
+            return str(ok)
 
-            if cmd == "setdet":
-                ch = int(parts[1])
-                voltage = float(parts[2])
-                ok = self.biasControl.set_voltage(ch, voltage) if self.biasControlPresent else False
-                self.logger.info(f"Set Detector {ch} to {voltage}V: {ok}")
-                return str(ok)
+        if cmd == "setdet":
+            ch = int(parts[1])
+            voltage = float(parts[2])
+            ok = self.biasControl.set_voltage(ch, voltage) if self.biasControlPresent else False
+            self.logger.info(f"Set Detector {ch} to {voltage}V: {ok}")
+            return str(ok)
 
-            if cmd == "setvolt":
-                ch = int(parts[1])
-                voltage = float(parts[2])
-                ok = self.biasControl.set_voltage(ch, voltage) if self.biasControlPresent else False
-                self.logger.info(f"Set Voltage on channel {ch} to {voltage}V: {ok}")
-                return str(ok)
+        if cmd == "setvolt":
+            ch = int(parts[1])
+            voltage = float(parts[2])
+            ok = self.biasControl.set_voltage(ch, voltage) if self.biasControlPresent else False
+            self.logger.info(f"Set Voltage on channel {ch} to {voltage}V: {ok}")
+            return str(ok)
 
-            if cmd == "setdetconfig":
-                settings = json.loads(parts[1])
-                cfg = load_yaml(self.config_file)
-                for k, v in settings.items():
-                    cfg["Keithley"]["Bias"][int(k)] = float(v)
-                save_yaml_data(self.config_file, cfg)
-                ok = reset_detectors(self.config_file)
-                self.logger.info(f"Detector configuration set: {ok}")
-                return str(ok)
+        if cmd == "setdetconfig":
+            settings = json.loads(parts[1])
+            cfg = load_yaml(self.config_file)
+            for k, v in settings.items():
+                cfg["Keithley"]["Bias"][int(k)] = float(v)
+            save_yaml_data(self.config_file, cfg)
+            ok = reset_detectors(self.config_file)
+            self.logger.info(f"Detector configuration set: {ok}")
+            return str(ok)
 
-            if cmd == "setcomparatorconfig":
-                settings = json.loads(parts[1])
-                cfg = load_yaml(self.config_file)
-                for k, v in settings.items():
-                    cfg["Comparator"][k]['value'] = float(v)
-                save_yaml_data(self.config_file, cfg)
-                ok = reset_comparator(self.config_file)
-                self.logger.info(f"Comparator configuration set: {ok}") 
-                return str(ok)
+        if cmd == "setcomparatorconfig":
+            settings = json.loads(parts[1])
+            cfg = load_yaml(self.config_file)
+            for k, v in settings.items():
+                cfg["Comparator"][k]['value'] = float(v)
+            save_yaml_data(self.config_file, cfg)
+            ok = reset_comparator(self.config_file)
+            self.logger.info(f"Comparator configuration set: {ok}") 
+            return str(ok)
 
-            if cmd == "setcomparatorchannel":
-                channel = parts[1]
-                value = float(parts[2])
-                cfg = load_yaml(self.config_file)
-                cfg["Comparator"][channel]['value'] = value
-                save_yaml_data(self.config_file, cfg)
-                ok = reset_comparator(self.config_file)
-                self.logger.info(f"Set Comparator channel {channel} to {value}V: {ok}")
-                return str(ok)
-            self.logger.warning(f"Invalid command: {message}")
-            return "Invalid Command"
+        if cmd == "setcomparatorchannel":
+            channel = parts[1]
+            value = float(parts[2])
+            cfg = load_yaml(self.config_file)
+            cfg["Comparator"][channel]['value'] = value
+            save_yaml_data(self.config_file, cfg)
+            ok = reset_comparator(self.config_file)
+            self.logger.info(f"Set Comparator channel {channel} to {value}V: {ok}")
+            return str(ok)
+        self.logger.warning(f"Invalid command: {message}")
+        return "Invalid Command"
 
-        except Exception as e:
-            self.logger.error(f"Error handling '{message}': {e}")
-            return f"Error: {e}"
+        # except Exception as e:
+        #     self.logger.error(f"Error handling '{message}': {e}")
+        #     return f"Error: {e}"
 
 if __name__ == '__main__':
     service = DetectorControlService(config_file='det.yaml', n_workers=1)
