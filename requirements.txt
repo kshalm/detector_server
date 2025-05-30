@@ -1,0 +1,10 @@
+pyserial
+pyzmq
+future
+libusb1
+hidapi
+pyYAML
+redis
+requests    
+loguru
+git+https://github.com/kshalm/zmqhelpers

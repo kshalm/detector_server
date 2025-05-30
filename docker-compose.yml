@@ -1,0 +1,21 @@
+version: '3.7'
+services:
+    detserver:
+        image: 'detserver:latest'
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: detserver
+        ports:
+            - '56000:56000'
+            - '56001:56001'
+        privileged: true
+        working_dir: /app/
+        volumes:
+            - ./src:/app
+            - /dev:/dev
+            - ./config:/config
+            - ./logs:/app/logs
+        stdin_open: true
+        tty: true
+        command: ["python3", "detector_server.py"]

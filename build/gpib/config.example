@@ -1,0 +1,177 @@
+---
+addr: 11 
+inst: aq820113
+intf: gpib
+name: laser
+port: /dev/prologix0
+slot: 9
+type: laser
+---
+addr: 11 
+inst: aq820133
+intf: gpib
+name: att1
+port: /dev/prologix0
+slot: 6
+type: att
+---
+addr: 11
+inst: aq820133
+intf: gpib
+name: att2
+port: /dev/prologix0
+slot: 7
+type: att
+---
+addr: 11
+inst: aq8201422
+intf: gpib
+name: switch
+port: /dev/prologix0
+slot: 8
+device_number: 1
+type: switch
+---
+addr: 11
+inst: aq820122
+intf: gpib
+name: pm1
+port: /dev/prologix0
+slot: 10
+device_number: 1
+type: pm
+---
+addr: 11
+inst: aq820122
+intf: gpib
+name: pm2
+port: /dev/prologix0
+slot: 10
+device_number: 2
+type: pm
+---
+addr: 4
+inst: SIM928
+intf: gpib
+name: bias1
+port: /dev/prologix0
+slot: 1
+type: vsrc
+---
+addr: 4
+inst: SIM928
+intf: gpib
+name: bias2
+port: /dev/prologix0
+slot: 2
+type: vsrc
+# ---
+# addr: 4
+# inst: SIM928
+# intf: gpib
+# name: bias3
+# port: /dev/prologix0
+# slot: 3
+# type: vsrc
+# ---
+# addr: 4
+# inst: SIM928
+# intf: gpib
+# name: bias4
+# port: /dev/prologix0
+# slot: 4
+# type: vsrc
+---
+addr: 4
+inst: SIM928
+intf: gpib
+name: bias5
+port: /dev/prologix0
+slot: 5
+type: vsrc
+---
+addr: 4
+inst: SIM928
+intf: gpib
+name: bias6
+port: /dev/prologix0
+slot: 6
+type: vsrc
+---
+addr: 4
+inst: SIM970
+intf: gpib
+name: dmm0
+port: /dev/prologix0
+slot: 7
+type: dmm
+# ---
+# addr: 22
+# inst: sr400
+# intf: gpib
+# name: counter1
+# port: /dev/prologix0
+# type: counter
+# ---
+# addr: 23
+# inst: sr400
+# intf: gpib
+# name: counter2
+# port: /dev/prologix0
+# type: counter
+---
+inst: mcc.usb3100
+intf: mccusb
+path: '0003:000c:00'
+name: mcc.ch0
+type: vsrc
+channel: 0
+---
+inst: mcc.usb3100
+intf: mccusb
+path: '0003:000c:00'
+name: mcc.ch1
+type: vsrc
+channel: 1
+---
+inst: mcc.usb3100
+intf: mccusb
+path: '0003:000c:00'
+name: mcc.ch2
+type: vsrc
+channel: 2
+---
+inst: mcc.usb3100
+intf: mccusb
+path: '0003:000c:00'
+name: mcc.ch3
+type: vsrc
+channel: 3
+---
+inst: mcc.usb3100
+intf: mccusb
+path: '0003:000c:00'
+name: mcc.ch4
+type: vsrc
+channel: 4
+---
+inst: mcc.usb3100
+intf: mccusb
+path: '0003:000c:00'
+name: mcc.ch5
+type: vsrc
+channel: 5
+---
+inst: mcc.usb3100
+intf: mccusb
+path: '0003:000c:00'
+name: mcc.ch6
+type: vsrc
+channel: 6
+---
+inst: mcc.usb3100
+intf: mccusb
+path: '0003:000c:00'
+name: mcc.ch7
+type: vsrc
+channel: 7

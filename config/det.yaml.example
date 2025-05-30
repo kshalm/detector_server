@@ -1,0 +1,49 @@
+Comparator:
+  hyst1A:
+    ch: 2
+    value: 4.1
+  hyst1B:
+    ch: 4
+    value: 0.0
+  hyst2A:
+    ch: 3
+    value: 0.0
+  hyst2B:
+    ch: 7
+    value: 0.0
+  thresh1A:
+    ch: 0
+    value: 0.55
+  thresh1B:
+    ch: 6
+    value: 0.0
+  thresh2A:
+    ch: 1
+    value: 9.6
+  thresh2B:
+    ch: 5
+    value: 3.0
+Keithley:
+  Bias:
+    '1': 0.0
+    '2': 0.47
+    1: 0.0
+    2: 0.47
+  Device:
+    port: COM0
+  Info:
+    GpibAddr: 9
+Key_Order:
+  Comparator:
+  - hyst1A
+  - thresh1A
+  - hyst1B
+  - thresh1B
+  - hyst2A
+  - thresh2A
+  - hyst2B
+  - thresh2B
+  Keithley:
+    Bias:
+    - '1'
+    - '2'
